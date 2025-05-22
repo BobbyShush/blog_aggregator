@@ -32,6 +32,11 @@ func main(){
 	}
 	commands.Register("login", cmds.HandlerLogin)
 	commands.Register("register", cmds.HandlerRegister)
+	commands.Register("reset", cmds.HandlerReset)
+	commands.Register("users", cmds.HandlerUsers)
+	commands.Register("agg", cmds.HandlerAgg)
+	commands.Register("addfeed", cmds.HandlerAddFeed)
+	commands.Register("feeds", cmds.HandlerFeeds)
 
 	lauchArgs := os.Args
 	if len(lauchArgs) < 2 {
