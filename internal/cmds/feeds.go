@@ -16,7 +16,7 @@ func HandlerFeeds(s *State, cmd Command) error{
 		fmt.Printf("ID: %v\n", f.ID)
 		fmt.Printf("Name: %v\n", f.Name)
 		fmt.Printf("URL: %v\n", f.Url)
-		fmt.Printf("User name: %v\n", f.CreatorName.String)
+		fmt.Printf("User name: %v\n", f.CreatorName)
 	}
 	return nil
 }

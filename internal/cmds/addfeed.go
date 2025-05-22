@@ -8,17 +8,12 @@ import (
 	"bootdev/blog_aggregator/internal/database"
 )
 
-func HandlerAddFeed(s *State, cmd Command) error {
+func HandlerAddFeed(s *State, cmd Command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return fmt.Errorf("Expecting 2 arguments: feed name + url") 
 	}
 
-	user, err := s.Db.GetUser(context.Background(), s.Config.CurrentUserName)
-	if err != nil {
-		return err
-	}
-
-	params := database.CreateFeedParams{
+	feedParams := database.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -27,9 +22,22 @@ func HandlerAddFeed(s *State, cmd Command) error {
 		UserID:    user.ID,
 	}
 
-	feed, err := s.Db.CreateFeed(context.Background(), params)
+	feed, err := s.Db.CreateFeed(context.Background(), feedParams)
 	if err != nil {
 		return err
+	}
+
+	followParams := database.CreateFeedFollowParams{
+		ID:			uuid.New(),
+		CreatedAt:	time.Now(),
+		UpdatedAt:	time.Now(),
+		UserID:		user.ID,
+		FeedID:		feed.ID,
+	}
+
+	_, err = s.Db.CreateFeedFollow(context.Background(), followParams)
+	if err != nil {
+		return nil
 	}
 
 	fmt.Println("FEED CREATED IN DATABASE")
