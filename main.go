@@ -4,6 +4,7 @@ import _ "github.com/lib/pq"
 import (
 	"fmt"
 	"os"
+	"log"
 	"database/sql"
 	"bootdev/blog_aggregator/internal/database"
 	"bootdev/blog_aggregator/internal/config"
@@ -40,6 +41,7 @@ func main(){
 	commands.Register("follow", cmds.MiddlewareLoggedIn(cmds.HandlerFollow))
 	commands.Register("following", cmds.MiddlewareLoggedIn(cmds.HandlerFollowing))
 	commands.Register("unfollow", cmds.MiddlewareLoggedIn(cmds.HandlerUnfollow))
+	commands.Register("browse", cmds.MiddlewareLoggedIn(cmds.HandlerBrowse))
 
 	lauchArgs := os.Args
 	if len(lauchArgs) < 2 {
@@ -54,7 +56,7 @@ func main(){
 
 	err = commands.Run(&state, command)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
 }
