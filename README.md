@@ -66,7 +66,9 @@ This will ensure the app can be used with the gator command from anywhere.
 - Run up the migration. Use this command from the base of the repository with the proper credentials.
 - - MacOS - System username, no password
 - - Linux/WSL - Username "postgres", in-app password (set earlier)
+```bash
 `goose -dir ./sql/schema postgres postgres://<username>:<password>@localhost:5432/gator up`
+```
 
 ### Config setup
 In the home directory, create a file named .gatorconfig.json and paste this content inside (adapt the username and password accordingly):
@@ -263,7 +265,7 @@ Example:
 commands.Register("addfeed", cmds.MiddlewareLoggedIn(cmds.HandlerAddFeed))
 ```
 
-Once the user input in parsed in main.go the commands.Run() method uses the commands map to call the appropriate command user the registered handlers.
+Once the user input in parsed in main.go the commands.Run() method uses the commands map to call the appropriate command using the registered handlers.
 
 # Useful links
 - [What is an RSS Feed?](https://en.wikipedia.org/wiki/RSS) 
