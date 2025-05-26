@@ -3,7 +3,7 @@ package cmds
 import (
 	"fmt"
 	"context"
-	"bootdev/blog_aggregator/internal/database"
+	"bootdev/gator/internal/database"
 )
 
 func HandlerUnfollow(s *State, cmd Command, user database.User) error {

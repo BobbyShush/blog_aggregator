@@ -8,8 +8,8 @@ import (
 	"database/sql"
 	"github.com/lib/pq"
 	"github.com/google/uuid"
-	"bootdev/blog_aggregator/internal/rss"
-	"bootdev/blog_aggregator/internal/database"
+	"bootdev/gator/internal/rss"
+	"bootdev/gator/internal/database"
 )
 
 func HandlerAgg(s *State, cmd Command) error {

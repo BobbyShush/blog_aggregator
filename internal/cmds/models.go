@@ -1,8 +1,8 @@
 package cmds
 
 import (
-	"bootdev/blog_aggregator/internal/database"
-	"bootdev/blog_aggregator/internal/config"	
+	"bootdev/gator/internal/database"
+	"bootdev/gator/internal/config"	
 )
 
 type State struct {

@@ -7,7 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/google/uuid"
-	"bootdev/blog_aggregator/internal/database"
+	"bootdev/gator/internal/database"
 )
 
 func HandlerRegister(s *State, cmd Command) error{

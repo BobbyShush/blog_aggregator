@@ -2,7 +2,7 @@ package cmds
 
 import (
 	"context"
-	"bootdev/blog_aggregator/internal/database"
+	"bootdev/gator/internal/database"
 )
 
 func MiddlewareLoggedIn(handler func(s *State, cmd Command, user database.User) error) func(*State, Command) error {

@@ -1,4 +1,4 @@
-module bootdev/blog_aggregator
+module bootdev/gator
 
 go 1.24.3
 

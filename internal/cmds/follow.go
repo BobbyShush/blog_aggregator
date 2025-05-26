@@ -5,7 +5,7 @@ import (
 	"time"
 	"context"
 	"github.com/google/uuid"
-	"bootdev/blog_aggregator/internal/database"
+	"bootdev/gator/internal/database"
 )
 
 func HandlerFollow(s *State, cmd Command, user database.User) error {

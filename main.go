@@ -6,9 +6,9 @@ import (
 	"os"
 	"log"
 	"database/sql"
-	"bootdev/blog_aggregator/internal/database"
-	"bootdev/blog_aggregator/internal/config"
-	"bootdev/blog_aggregator/internal/cmds"
+	"bootdev/gator/internal/database"
+	"bootdev/gator/internal/config"
+	"bootdev/gator/internal/cmds"
 )
 
 func main(){
