@@ -67,7 +67,7 @@ This will ensure the app can be used with the gator command from anywhere.
 - - MacOS - System username, no password
 - - Linux/WSL - Username "postgres", in-app password (set earlier)
 ```bash
-`goose -dir ./sql/schema postgres postgres://<username>:<password>@localhost:5432/gator up`
+goose -dir ./sql/schema postgres postgres://<username>:<password>@localhost:5432/gator up
 ```
 
 ### Config setup
