@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"time"
+	"strings"
 	"context"
 	"database/sql"
-	"github.com/lib/pq"
 	"github.com/google/uuid"
 	"bootdev/gator/internal/rss"
 	"bootdev/gator/internal/database"
@@ -19,7 +19,7 @@ func HandlerAgg(s *State, cmd Command) error {
 
 	timeBetweenRequests, err := time.ParseDuration(cmd.Args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("Invalid duration provided as argument. Err: %w", err)
 	}
 	fmt.Printf("Collecting feeds every %s\n", cmd.Args[0])
 
@@ -37,7 +37,7 @@ func HandlerAgg(s *State, cmd Command) error {
 func scrapeFeeds(s *State) error {
 	nextFeedToFetch, err := s.Db.GetNextFeedToFetch(context.Background())
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't get next feed to fetch. Err: %w", err)
 	}
 
 	params := database.MarkFeedFetchedParams{
@@ -46,37 +46,36 @@ func scrapeFeeds(s *State) error {
 	}
 	err = s.Db.MarkFeedFetched(context.Background(), params)
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't mark feed as fetched. Err: %w", err)
 	}
 
 	feed, err := rss.FetchFeed(context.Background(), nextFeedToFetch.Url)
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't collect feed %s. Err: %w", feed.Name, err)
 	}
 	for _, item := range feed.Channel.Item {
 		hasTitle := hasField(item.Title)
 		if !hasTitle {
 			continue
 		}
-		hasDescription := hasField(item.Description)
 		hasLink := hasField(item.Link)
 		if !hasLink {
 			continue
 		}
+		hasDescription := hasField(item.Description)
 		hasPubDate := hasField(item.PubDate)
 		parsedPubDate := time.Time{}
-		err = nil
 
 		if hasPubDate {
 			parsedPubDate, err = parsePubDate(item.PubDate)
 			if err != nil {
 				hasPubDate = false
-				err = fmt.Errorf("Failed to parse pubDate %q from feed %q: %v", item.PubDate, nextFeedToFetch.Url, err)
+				err = fmt.Errorf("Failed to parse pubDate %q from feed %q: %w", item.PubDate, nextFeedToFetch.Url, err)
 				log.Println(err)
 			}
 		}
 		
-		params := database.CreatePostParams{
+		params = database.CreatePostParams{
 			ID:          uuid.New(),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -89,12 +88,10 @@ func scrapeFeeds(s *State) error {
 
 		_, err := s.Db.CreatePost(context.Background(), params)
 		if err != nil {
-			if pqErr, ok := err.(*pq.Error); ok {
-				if pqErr.Code == "23505" {
-					continue
-				}
+			if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+				continue
 			}
-			return err
+			log.Printf("Couldn't create post. Err: %v", err)
 		}
 	}
 	return nil

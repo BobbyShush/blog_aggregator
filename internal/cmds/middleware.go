@@ -1,6 +1,7 @@
 package cmds
 
 import (
+	"fmt"
 	"context"
 	"bootdev/gator/internal/database"
 )
@@ -9,7 +10,7 @@ func MiddlewareLoggedIn(handler func(s *State, cmd Command, user database.User) 
 	return func(s *State, cmd Command) error {
 		user, err := s.Db.GetUser(context.Background(), s.Config.CurrentUserName)
 		if err != nil {
-			return err
+			return fmt.Errorf("Couldn't get user info for current user. Err: %w", err)
 		}
 		err = handler(s, cmd, user)
 		if err != nil {

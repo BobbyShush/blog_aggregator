@@ -8,7 +8,7 @@ import (
 func HandlerUsers(s *State, cmd Command) error{
 	users, err := s.Db.GetUsers(context.Background())
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to get users in the database. Err: %w", err)
 	}
 
 	for _, user := range users {

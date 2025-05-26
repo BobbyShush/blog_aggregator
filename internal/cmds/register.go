@@ -20,7 +20,7 @@ func HandlerRegister(s *State, cmd Command) error{
 		return fmt.Errorf("A user with that name already exists")
 	} else if !errors.Is(err, sql.ErrNoRows) {
     	// Some other error occurred
-    	return err
+    	return fmt.Errorf("Failed check for user in database. Err: %w", err)
 	}
 
 	params := database.CreateUserParams{
@@ -32,12 +32,12 @@ func HandlerRegister(s *State, cmd Command) error{
 
 	user, err := s.Db.CreateUser(context.Background(), params)
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create user. Err: %w", err)
 	}
 
 	err = s.Config.SetUser(cmd.Args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed login. Err: %w", err)
 	}
 
 	fmt.Printf("User created:\nID: %v\nCreated at: %v\nUpdated at: %v\nName: %v\n", 

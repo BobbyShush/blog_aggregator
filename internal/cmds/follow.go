@@ -15,7 +15,7 @@ func HandlerFollow(s *State, cmd Command, user database.User) error {
 
 	feedID, err := s.Db.GetFeedID(context.Background(), cmd.Args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't get feed ID for url %s. Err: %w", err)
 	}
 
 	params := database.CreateFeedFollowParams{
@@ -28,7 +28,7 @@ func HandlerFollow(s *State, cmd Command, user database.User) error {
 
 	feedFollow, err := s.Db.CreateFeedFollow(context.Background(), params)
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't create follow. Err: %w", err)
 	}
 	
 	fmt.Printf("User %s now follows feed %s\n", feedFollow.UserName, feedFollow.FeedName)

@@ -24,7 +24,7 @@ func HandlerAddFeed(s *State, cmd Command, user database.User) error {
 
 	feed, err := s.Db.CreateFeed(context.Background(), feedParams)
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't create feed. Err: %w", err)
 	}
 
 	followParams := database.CreateFeedFollowParams{
@@ -37,7 +37,7 @@ func HandlerAddFeed(s *State, cmd Command, user database.User) error {
 
 	_, err = s.Db.CreateFeedFollow(context.Background(), followParams)
 	if err != nil {
-		return nil
+		return fmt.Errorf("Couldn't create follow. Err: %w", err)
 	}
 
 	fmt.Println("FEED CREATED IN DATABASE")

@@ -17,7 +17,7 @@ func HandlerLogin(s *State, cmd Command) error {
 
 	err = s.Config.SetUser(cmd.Args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed login. Err: %w", err)
 	}
 	fmt.Printf("User set to: %s\n", cmd.Args[0])
 	return nil

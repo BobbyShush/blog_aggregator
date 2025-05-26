@@ -1,11 +1,11 @@
 package main
 
-import _ "github.com/lib/pq"
 import (
 	"fmt"
 	"os"
 	"log"
 	"database/sql"
+	_ "github.com/lib/pq"
 	"bootdev/gator/internal/database"
 	"bootdev/gator/internal/config"
 	"bootdev/gator/internal/cmds"
@@ -14,17 +14,16 @@ import (
 func main(){
 	cfg, err := config.Read()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("Failed to read config file. Err: %v", err)
 	}
 
 	state := cmds.State{ Config: &cfg }
 	
 	db, err := sql.Open("postgres", state.Config.DbUrl)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("Failed to open database. Err: %v", err)
 	}
+	defer db.Close()
 	dbQueries := database.New(db)
 	state.Db = dbQueries
 
@@ -45,8 +44,7 @@ func main(){
 
 	lauchArgs := os.Args
 	if len(lauchArgs) < 2 {
-		fmt.Println("Not enough arguments provided")
-		os.Exit(1)
+		log.Fatalf("Please enter a valid command. Format: gator <command name> <arguments>")
 	}
 
 	command := cmds.Command{
@@ -56,7 +54,6 @@ func main(){
 
 	err = commands.Run(&state, command)
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }

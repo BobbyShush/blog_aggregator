@@ -23,7 +23,7 @@ func HandlerUnfollow(s *State, cmd Command, user database.User) error {
 	
 	err = s.Db.DeleteFollow(context.Background(), params)
 	if err != nil {
-		return err
+		return fmt.Errorf("Couldn't delete follow", err)
 	}
 	fmt.Println("Unfollow completed")
 	return nil

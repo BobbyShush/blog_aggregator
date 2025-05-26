@@ -12,7 +12,7 @@ func HandlerBrowse(s *State, cmd Command, user database.User) error {
 	if len(cmd.Args) > 0 {
 		limit, err := strconv.Atoi(cmd.Args[0])
 		if err != nil {
-			return fmt.Errorf("Expected 1 argument: limit. Err: %v", err)
+			return fmt.Errorf("Expected 1 argument: limit (numerical). Err: %w", err)
 		}
 		limit32 = int32(limit)
 	}
@@ -24,7 +24,7 @@ func HandlerBrowse(s *State, cmd Command, user database.User) error {
 	
 	posts, err := s.Db.GetPostsForUser(context.Background(), params)
 	if err != nil {
-		return err
+		return fmt.Errorf("Unable to get posts for user %s. Err: %w", user.Name, err)
 	}
 
 	for i, post := range posts {
