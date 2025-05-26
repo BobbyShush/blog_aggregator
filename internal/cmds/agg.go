@@ -51,7 +51,7 @@ func scrapeFeeds(s *State) error {
 
 	feed, err := rss.FetchFeed(context.Background(), nextFeedToFetch.Url)
 	if err != nil {
-		return fmt.Errorf("Couldn't collect feed %s. Err: %w", feed.Name, err)
+		return fmt.Errorf("Couldn't collect feed %s. Err: %w", nextFeedToFetch.Url, err)
 	}
 	for _, item := range feed.Channel.Item {
 		hasTitle := hasField(item.Title)
@@ -75,7 +75,7 @@ func scrapeFeeds(s *State) error {
 			}
 		}
 		
-		params = database.CreatePostParams{
+		params := database.CreatePostParams{
 			ID:          uuid.New(),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
